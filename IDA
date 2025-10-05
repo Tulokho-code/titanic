@@ -1,0 +1,189 @@
+# 1. Univariate Analysis
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Survived
+plt.figure(figsize=(6,4))
+sns.countplot(x='Survived', data=train_df)
+plt.title('Distribution of Survived')
+plt.xlabel('Survived')
+plt.ylabel('Count')
+plt.show()
+
+# Pclass
+plt.figure(figsize=(6,4))
+sns.countplot(x='Pclass', data=train_df)
+plt.title('Distribution of Pclass')
+plt.xlabel('Pclass')
+plt.ylabel('Count')
+plt.show()
+
+# Sex
+plt.figure(figsize=(6,4))
+sns.countplot(x='Sex', data=train_df)
+plt.title('Distribution of Sex')
+plt.xlabel('Sex')
+plt.ylabel('Count')
+plt.show()
+
+# Age
+plt.figure(figsize=(8,4))
+sns.histplot(train_df['Age'].dropna(), kde=True, bins=30)
+plt.title('Distribution of Age')
+plt.xlabel('Age')
+plt.ylabel('Count')
+plt.show()
+
+# Fare
+plt.figure(figsize=(8,4))
+sns.histplot(train_df['Fare'], kde=True, bins=30)
+plt.title('Distribution of Fare')
+plt.xlabel('Fare')
+plt.ylabel('Count')
+plt.show()
+
+# SibSp
+plt.figure(figsize=(6,4))
+sns.countplot(x='SibSp', data=train_df)
+plt.title('Distribution of SibSp')
+plt.xlabel('SibSp')
+plt.ylabel('Count')
+plt.show()
+
+# Parch
+plt.figure(figsize=(6,4))
+sns.countplot(x='Parch', data=train_df)
+plt.title('Distribution of Parch')
+plt.xlabel('Parch')
+plt.ylabel('Count')
+plt.show()
+
+# Embarked
+plt.figure(figsize=(6,4))
+sns.countplot(x='Embarked', data=train_df)
+plt.title('Distribution of Embarked')
+plt.xlabel('Embarked')
+plt.ylabel('Count')
+plt.show()
+
+# 2. Bivariate Analysis
+
+# Sex vs Survived
+plt.figure(figsize=(6,4))
+sns.barplot(x='Sex', y='Survived', data=train_df)
+plt.title('Survival Rate by Sex')
+plt.ylabel('Survival Rate')
+plt.show()
+
+# Pclass vs Survived
+plt.figure(figsize=(6,4))
+sns.barplot(x='Pclass', y='Survived', data=train_df)
+plt.title('Survival Rate by Pclass')
+plt.ylabel('Survival Rate')
+plt.show()
+
+# Age vs Survived
+plt.figure(figsize=(8,4))
+sns.violinplot(x='Survived', y='Age', data=train_df)
+plt.title('Age Distribution by Survival')
+plt.show()
+
+# Fare vs Survived
+plt.figure(figsize=(8,4))
+sns.boxplot(x='Survived', y='Fare', data=train_df)
+plt.title('Fare Distribution by Survival')
+plt.show()
+
+# SibSp vs Survived
+plt.figure(figsize=(6,4))
+sns.barplot(x='SibSp', y='Survived', data=train_df)
+plt.title('Survival Rate by SibSp')
+plt.ylabel('Survival Rate')
+plt.show()
+
+# Parch vs Survived
+plt.figure(figsize=(6,4))
+sns.barplot(x='Parch', y='Survived', data=train_df)
+plt.title('Survival Rate by Parch')
+plt.ylabel('Survival Rate')
+plt.show()
+
+# Embarked vs Survived
+plt.figure(figsize=(6,4))
+sns.barplot(x='Embarked', y='Survived', data=train_df)
+plt.title('Survival Rate by Embarked')
+plt.ylabel('Survival Rate')
+plt.show()
+
+# 3. Multivariate Analysis
+
+# Correlation Heatmap
+plt.figure(figsize=(8,6))
+sns.heatmap(train_df[['Survived','Age','Fare','SibSp','Parch']].corr(), annot=True, cmap='coolwarm')
+plt.title('Correlation Heatmap')
+plt.show()
+
+# Sex + Pclass vs Survived
+sns.catplot(x='Pclass', hue='Sex', col='Survived', data=train_df, kind='count', height=4, aspect=1)
+plt.suptitle('Pclass & Sex vs Survived', y=1.05)
+plt.show()
+
+# Age + Sex + Survived
+sns.violinplot(x='Sex', y='Age', hue='Survived', data=train_df, split=True)
+plt.title('Age Distribution by Sex and Survival')
+plt.show()
+
+# Family Size Feature
+train_df['FamilySize'] = train_df['SibSp'] + train_df['Parch'] + 1
+plt.figure(figsize=(8,4))
+sns.barplot(x='FamilySize', y='Survived', data=train_df)
+plt.title('Survival Rate by Family Size')
+plt.ylabel('Survival Rate')
+plt.show()
+
+# 4. Missing Values & Outliers
+
+# Missing Values Heatmap
+plt.figure(figsize=(10,6))
+sns.heatmap(train_df.isnull(), cbar=False, yticklabels=False, cmap='viridis')
+plt.title('Missing Values Heatmap')
+plt.show()
+
+# Outliers Age
+plt.figure(figsize=(6,4))
+sns.boxplot(x=train_df['Age'])
+plt.title('Age Outliers')
+plt.show()
+
+# Outliers Fare
+plt.figure(figsize=(6,4))
+sns.boxplot(x=train_df['Fare'])
+plt.title('Fare Outliers')
+plt.show()
+
+# 5. Feature Engineering Visualization
+
+# IsAlone Feature
+train_df['IsAlone'] = (train_df['FamilySize'] == 1).astype(int)
+plt.figure(figsize=(6,4))
+sns.barplot(x='IsAlone', y='Survived', data=train_df)
+plt.title('Survival Rate by IsAlone')
+plt.ylabel('Survival Rate')
+plt.show()
+
+# AgeGroup Feature
+train_df['AgeGroup'] = pd.cut(train_df['Age'], bins=[0,12,18,35,60,80], labels=['Child','Teen','YoungAdult','Adult','Senior'])
+plt.figure(figsize=(6,4))
+sns.barplot(x='AgeGroup', y='Survived', data=train_df)
+plt.title('Survival Rate by Age Group')
+plt.ylabel('Survival Rate')
+plt.show()
+
+# FareBin Feature
+train_df['FareBin'] = pd.qcut(train_df['Fare'], 4, labels=['Low','Mid','High','VeryHigh'])
+plt.figure(figsize=(6,4))
+sns.barplot(x='FareBin', y='Survived', data=train_df)
+plt.title('Survival Rate by Fare Bin')
+plt.ylabel('Survival Rate')
+plt.show()
